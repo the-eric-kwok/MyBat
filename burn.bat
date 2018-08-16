@@ -25,5 +25,5 @@ if [%1]==[] (
 )
 
 :burn
-ffmpeg.exe -i %video% -i %Logo% -filter_complex "[1]scale=200:200[logo];[0][logo]overlay=%pos%[taged];[taged]ass='%ass%'[sub]" -map [sub] -map 0:a %output%
+ffmpeg.exe -i %video% -i %Logo% -filter_complex "[1]scale=100:100[logo];[0][logo]overlay=%pos%[taged];[taged]ass='%ass%'[sub]" -map [sub] -map 0:a %output%
 exit
