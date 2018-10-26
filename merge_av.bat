@@ -10,5 +10,5 @@ set audio=%2
 set output=%3
 
 :merge
-ffmpeg -i %video% -i %audio% -c:v copy %output%
+ffmpeg -i %video% -i %audio% -c:v copy -c:a copy %output%
 exit
