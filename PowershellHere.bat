@@ -25,7 +25,7 @@ if '%1'=='ELEV' (echo ELEV & shift /1 & goto gotPrivileges)
 
 ::**************************************
 ::Invoking UAC for Privilege Escalation
-::**************************************
+::*************************************
 
 ECHO Set UAC = CreateObject^("Shell.Application"^) > "%vbsGetPrivileges%"
 ECHO args = "ELEV " >> "%vbsGetPrivileges%"
@@ -45,6 +45,22 @@ if '%1'=='ELEV' (del "%vbsGetPrivileges%" 1>nul 2>nul  &  shift /1)
 ::START
 ::::::::::::::::::::::::::::
 REM Run shell as admin (example) - put here code as you like
-FOR /F "tokens=11 delims=\" %%p IN ('REG QUERY "HKCU\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Mappings"') DO CheckNetIsolation.exe LoopbackExempt -a -p=%%p
-echo All done!
+:choice
+choice /C IRC /M "Do you want to [I]nstall or [R]emove or [C]ancel? Please press the button." /T 30 /D C
+if errorlevel 3 exit
+if errorlevel 2 goto remove
+if errorlevel 1 goto install
 pause
+exit
+
+:install
+reg add HKEY_CLASSES_ROOT\Directory\Background\shell\powershellmenu /ve /t REG_SZ /d "Powershell Here"
+reg add HKEY_CLASSES_ROOT\Directory\Background\shell\powershellmenu /v Icon /t REG_SZ /d "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+reg add HKEY_CLASSES_ROOT\Directory\Background\shell\powershellmenu\command /ve /t REG_SZ /d "powershell.exe -noexit -command Set-Location -literalPath '%V'"
+pause
+exit
+
+:remove
+reg delete HKEY_CLASSES_ROOT\Directory\Background\shell\powershellmenu /f
+pause
+exit

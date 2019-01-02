@@ -25,7 +25,7 @@ if '%1'=='ELEV' (echo ELEV & shift /1 & goto gotPrivileges)
 
 ::**************************************
 ::Invoking UAC for Privilege Escalation
-::**************************************
+::*************************************
 
 ECHO Set UAC = CreateObject^("Shell.Application"^) > "%vbsGetPrivileges%"
 ECHO args = "ELEV " >> "%vbsGetPrivileges%"
@@ -45,6 +45,27 @@ if '%1'=='ELEV' (del "%vbsGetPrivileges%" 1>nul 2>nul  &  shift /1)
 ::START
 ::::::::::::::::::::::::::::
 REM Run shell as admin (example) - put here code as you like
-FOR /F "tokens=11 delims=\" %%p IN ('REG QUERY "HKCU\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Mappings"') DO CheckNetIsolation.exe LoopbackExempt -a -p=%%p
-echo All done!
+:choice
+choice /C IRC /M "Do you want to [I]nstall or [R]emove or [C]ancel? Please press the button." /T 30 /D C
+if errorlevel 3 exit
+if errorlevel 2 goto remove
+if errorlevel 1 goto install
 pause
+exit
+
+:remove
+reg delete HKEY_CLASSES_ROOT\*\shell\runas /f
+reg delete HKEY_CLASSES_ROOT\Directory\shell\runas /f
+pause
+exit
+
+:install
+reg add HKEY_CLASSES_ROOT\*\shell\runas /ve /t REG_SZ /d "Get TrustedInstaller Permission"
+reg add HKEY_CLASSES_ROOT\*\shell\runas\command /ve /t REG_SZ /d "cmd.exe /c takeown /f """%%1""" && icacls """%%1""" /grant administrators:F"
+reg add HKEY_CLASSES_ROOT\*\shell\runas\command /v IsolatedCommand /t REG_SZ /d "cmd.exe /c takeown /f """%%1""" && icacls """%%1""" /grant administrators:F"
+reg add HKEY_CLASSES_ROOT\Directory\shell\runas /ve /t REG_SZ /d "Get TrustedInstaller Permission"
+reg add HKEY_CLASSES_ROOT\Directory\shell\runas /v NoWorkingDirectory /t REG_SZ /d ""
+reg add HKEY_CLASSES_ROOT\Directory\shell\runas\command /ve /t REG_SZ /d "cmd.exe /c takeown /f """%%1""" /r /d y && icacls """%%1""" /grant administrators:F /t"
+reg add HKEY_CLASSES_ROOT\Directory\shell\runas\command /v IsolatedCommand /t REG_SZ /d "cmd.exe /c takeown /f """%%1""" /r /d y && icacls """%%1""" /grant administrators:F /t"
+pause
+exit
