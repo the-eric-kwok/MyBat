@@ -56,7 +56,7 @@ exit
 :install
 reg add HKEY_CLASSES_ROOT\Directory\Background\shell\powershellmenu /ve /t REG_SZ /d "Powershell Here"
 reg add HKEY_CLASSES_ROOT\Directory\Background\shell\powershellmenu /v Icon /t REG_SZ /d "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
-reg add HKEY_CLASSES_ROOT\Directory\Background\shell\powershellmenu\command /ve /t REG_SZ /d "powershell.exe -noexit -command Set-Location -literalPath '%V'"
+reg add HKEY_CLASSES_ROOT\Directory\Background\shell\powershellmenu\command /ve /t REG_SZ /d "powershell.exe -noexit -command Set-Location -literalPath '%%V'"
 pause
 exit
 
