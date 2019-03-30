@@ -28,10 +28,10 @@ echo counter switch to rotate it counterclockwise for 90 degress
 echo;
 exit
 
-:clockwise
+:counterclockwise
 ffmpeg -i %input% -vf "transpose=1" %output%
 exit
 
-:counterclockwise
+:clockwise
 ffmpeg -i %input% -vf "transpose=2" %output%
 exit
